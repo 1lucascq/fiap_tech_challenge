@@ -2,7 +2,7 @@
 CREATE TABLE "Customer" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "email" TEXT NOT NULL,
-    "cpf" TEXT,
+    "cpf" TEXT NOT NULL,
     "name" TEXT NOT NULL
 );
 
