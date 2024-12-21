@@ -1,0 +1,34 @@
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Customer {
+    id    Int    @id @default(autoincrement())
+    email String @unique
+    cpf   String @unique
+    name  String
+
+    orders Order[]
+}
+
+model Product {
+    id          Int    @id @default(autoincrement())
+    name        String
+    ingredients String
+    category    String
+    price       Float
+}
+
+model Order {
+    id            Int      @id @default(autoincrement())
+    name          String
+    content       String
+    customerEmail String
+    customer      Customer @relation(fields: [customerEmail], references: [email])
+    customerName  String   @map("customerName")
+}
