@@ -16,19 +16,26 @@ model Customer {
     orders Order[]
 }
 
+model Category {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+
+    products Product[]
+}
+
 model Product {
-    id          Int    @id @default(autoincrement())
-    name        String
-    ingredients String
-    category    String
+    id          Int      @id @default(autoincrement())
+    name        String   @unique
+    ingredients String?
+    category    Category @relation(fields: [categoryId], references: [id])
+    categoryId  Int
     price       Float
 }
 
 model Order {
-    id            Int      @id @default(autoincrement())
-    name          String
-    content       String
-    customerEmail String
-    customer      Customer @relation(fields: [customerEmail], references: [email])
-    customerName  String   @map("customerName")
+    id           Int      @id @default(autoincrement())
+    content      String
+    customer     Customer @relation(fields: [customerCpf], references: [cpf])
+    customerName String   @map("customerName")
+    customerCpf  String
 }
