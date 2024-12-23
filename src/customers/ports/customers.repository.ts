@@ -3,8 +3,6 @@ import { Prisma, Customer } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ICustomersRepository } from '../interfaces';
 
-type uniqueInput = { email: string } | { cpf: string };
-
 @Injectable()
 export class CustomersRepository implements ICustomersRepository {
     constructor(private readonly prisma: PrismaService) {}
