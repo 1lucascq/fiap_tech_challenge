@@ -24,7 +24,7 @@ export class UniqueEmailValidator implements ValidatorConstraintInterface {
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {
-        return 'Este email já está em uso';
+		return 'This email is already in use';
     }
 }
 

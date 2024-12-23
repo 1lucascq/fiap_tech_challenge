@@ -25,7 +25,7 @@ export class UniqueCpfValidator implements ValidatorConstraintInterface {
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {
-        return 'Este cpf já está em uso';
+		return 'This CPF is already in use';
     }
 }
 

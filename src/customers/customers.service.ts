@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CustomersRepository } from './ports/customers.repository';
 import { Prisma } from '@prisma/client';
+import { CreateCustomerDto } from './dto/create-customer.dto';
 
 type uniqueInput = Prisma.CustomerWhereUniqueInput;
 
@@ -11,8 +11,8 @@ export class CustomersService {
     constructor(private readonly customerRepository: CustomersRepository) {}
 
     async create(createCustomerDto: CreateCustomerDto) {
-        const user = await this.customerRepository.create(createCustomerDto);
-        return { error: false, user };
+        const customer = await this.customerRepository.create(createCustomerDto);
+        return { error: false, customer };
     }
 
     async findAll() {
