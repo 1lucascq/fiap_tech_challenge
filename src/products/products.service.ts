@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductsRepository } from './ports/products.repository';
+import { Product } from './entities/product.entity';
+import { Prisma } from '@prisma/client';
+
+type uniqueInput = Prisma.ProductWhereUniqueInput;
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
+    constructor(private readonly productsRepository: ProductsRepository) {}
 
-  findAll() {
-    return `This action returns all products`;
-  }
+    async create(createProductDto: CreateProductDto) {
+        const productEntity = new Product(createProductDto);
+        const product = await this.productsRepository.create(productEntity);
+        return { error: false, product };
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+    async findAll() {
+        return this.productsRepository.findAll();
+    }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
+    async findOne(uniqueInput: uniqueInput) {
+        return this.productsRepository.findOne(uniqueInput);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
+    // async update(data: string, updateProductDto: UpdateProductDto) {
+    //     return this.productsRepository.update(data, updateProductDto);
+    // }
+
+    // async remove(data: string) {
+    //     return this.productsRepository.delete(data);
+    // }
 }
