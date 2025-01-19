@@ -1,13 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -34,8 +25,7 @@ export class CustomersController {
     })
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
-        description:
-            'Error creating a customer or the customer already exists.',
+        description: 'Error creating a customer or the customer already exists.',
         example: {
             message: ['This email is already in use'],
             error: 'Bad Request',
@@ -84,10 +74,7 @@ export class CustomersController {
     @Patch(':cpf')
     @ApiOperation({ summary: 'Updates a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
-    update(
-        @Param('cpf') cpf: string,
-        @Body() updateCustomerDto: UpdateCustomerDto,
-    ) {
+    update(@Param('cpf') cpf: string, @Body() updateCustomerDto: UpdateCustomerDto) {
         return this.customersService.update(cpf, updateCustomerDto);
     }
 
