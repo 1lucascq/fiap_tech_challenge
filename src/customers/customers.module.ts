@@ -9,7 +9,12 @@ import { UniqueCpfValidator } from './validations/uniqueCpf.validator';
 @Module({
     imports: [PrismaModule],
     controllers: [CustomersController],
-    providers: [CustomersService, CustomersRepository, UniqueEmailValidator, UniqueCpfValidator],
+    providers: [
+        CustomersService,
+        CustomersRepository,
+        UniqueEmailValidator,
+        UniqueCpfValidator,
+    ],
     exports: [CustomersRepository],
 })
 export class CustomersModule {}
