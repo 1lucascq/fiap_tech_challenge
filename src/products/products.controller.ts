@@ -1,17 +1,8 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpStatus, Put, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Products')
 @Controller('products')
@@ -48,50 +39,56 @@ export class ProductsController {
     }
 
     @Get()
-    @ApiOperation({ summary: 'Returns all customers.' })
+    @ApiOperation({ summary: 'Returns all products or products filtered by a given category.' })
+    @ApiQuery({ name: 'category', required: false, description: 'The category of the product.' })
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'List of customers.',
+        description: 'List of products.',
         example: [
             {
-                id: 1,
-                email: 'johndoe@example.com',
-                cpf: '12345678911',
-                name: 'John Doe',
+                id: 2,
+                name: 'X-Test',
+                ingredients: '["Bread","Tomato","Test"]',
+                categoryId: 3,
+                price: 35.9,
             },
         ],
     })
-    findAll() {
-        return this.productsService.findAll();
+    findAll(@Query('category') category: string) {
+        console.log('hey', category);
+        if (category) {
+            return this.productsService.findByCategory(category);
+        } else {
+            return this.productsService.findAll();
+        }
     }
 
-    //     @Get(':cpf')
-    //     @ApiOperation({ summary: 'Returns a specific customer.' })
-    //     @ApiParam({ name: 'cpf', description: 'The customer\'s CPF.' })
-    //     @ApiResponse({
-    //         status: HttpStatus.OK,
-    //         description: 'List of customers.',
-    //         example: {
-    //             id: 2,
-    //             email: 'johndoe@example.com',
-    //             cpf: '12345678912',
-    //             name: 'John Doe',
-    //         },
-    //     })
-    //     findOne(@Param('cpf') cpf: string) {
-    //         return this.productsService.findOne({ cpf: cpf });
-    //     }
+    @Get(':id')
+    @ApiOperation({ summary: 'Returns a specific Product.' })
+    @ApiParam({ name: 'id', description: "The product's id." })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'List of Products.',
+        example: {
+            id: 2,
+            name: 'X-Test',
+            ingredients: '["Bread","Tomato","Test"]',
+            categoryId: 3,
+            price: 35.9,
+        },
+    })
+    findOne(@Param('id') id: string) {
+        return this.productsService.findOne({ id: +id });
+    }
 
-    //     @Patch(':id')
-    //     update(
-    //         @Param('id') id: string,
-    //         @Body() updateProductDto: UpdateProductDto,
-    //     ) {
-    //         return this.productsService.update(+id, updateProductDto);
-    //     }
+    @Put(':id')
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+        console.log('hey');
+        return this.productsService.update(+id, updateProductDto);
+    }
 
-    //     @Delete(':id')
-    //     remove(@Param('id') id: string) {
-    //         return this.productsService.remove(+id);
-    //     }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.productsService.remove(+id);
+    }
 }

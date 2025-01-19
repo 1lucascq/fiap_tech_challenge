@@ -14,10 +14,21 @@ export class ProductsRepository {
         return this.prisma.product.findMany();
     }
 
-    async findOne(
-        uniqueInput: Prisma.ProductWhereUniqueInput,
-    ): Promise<Product | null> {
-        console.log('yo');
+    async findByCategory(category: string): Promise<Product[]> {
+        return this.prisma.product.findMany({
+            where: {
+                category: {
+                    name: {
+                        equals: category.charAt(0).toUpperCase() + category.slice(1),
+                        // equals: category,
+                        // mode: 'insensitive',
+                    },
+                },
+            },
+        });
+    }
+
+    async findOne(uniqueInput: Prisma.ProductWhereUniqueInput): Promise<Product | null> {
         const key = Object.keys(uniqueInput)[0];
         const value = Object.values(uniqueInput)[0];
         return this.prisma.product.findUnique({
@@ -27,17 +38,14 @@ export class ProductsRepository {
         });
     }
 
-    // async update(
-    // 	email: string,
-    // 	createProductDto: Prisma.ProductUpdateInput,
-    // ): Promise<Product> {
-    // 	return this.prisma.product.update({
-    // 		where: { email },
-    // 		data: createProductDto,
-    // 	});
-    // }
+    async update(id: number, createProductDto: Prisma.ProductUpdateInput): Promise<Product> {
+        return this.prisma.product.update({
+            where: { id },
+            data: createProductDto,
+        });
+    }
 
-    // async delete(email: string): Promise<Product> {
-    // 	return this.prisma.product.delete({ where: { email } });
-    // }
+    async delete(id: number): Promise<Product> {
+        return this.prisma.product.delete({ where: { id } });
+    }
 }

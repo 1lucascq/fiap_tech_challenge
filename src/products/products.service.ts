@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsRepository } from './ports/products.repository';
 import { Product } from './entities/product.entity';
 import { Prisma } from '@prisma/client';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 type uniqueInput = Prisma.ProductWhereUniqueInput;
 
@@ -21,15 +21,20 @@ export class ProductsService {
         return this.productsRepository.findAll();
     }
 
-    async findOne(uniqueInput: uniqueInput) {
-        return this.productsRepository.findOne(uniqueInput);
+    async findByCategory(category: string) {
+        return this.productsRepository.findByCategory(category);
     }
 
-    // async update(data: string, updateProductDto: UpdateProductDto) {
-    //     return this.productsRepository.update(data, updateProductDto);
-    // }
+    async findOne(id: uniqueInput) {
+        return this.productsRepository.findOne(id);
+    }
 
-    // async remove(data: string) {
-    //     return this.productsRepository.delete(data);
-    // }
+    async update(id: number, updateProductDto: UpdateProductDto) {
+        const productEntity = new Product(updateProductDto);
+        return this.productsRepository.update(id, productEntity);
+    }
+
+    async remove(id: number) {
+        return this.productsRepository.delete(id);
+    }
 }
