@@ -8,11 +8,7 @@ import { UniqueProductNameValidator } from './validations/uniqueProductName.vali
 @Module({
     imports: [PrismaModule],
     controllers: [ProductsController],
-    providers: [
-        ProductsService,
-        ProductsRepository,
-        UniqueProductNameValidator,
-    ],
+    providers: [ProductsService, ProductsRepository, UniqueProductNameValidator],
     exports: [ProductsRepository],
 })
 export class ProductsModule {}
