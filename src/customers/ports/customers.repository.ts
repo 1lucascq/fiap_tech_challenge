@@ -7,9 +7,7 @@ import { ICustomersRepository } from '../interfaces';
 export class CustomersRepository implements ICustomersRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(
-        createCustomerDto: Prisma.CustomerCreateInput,
-    ): Promise<Customer> {
+    async create(createCustomerDto: Prisma.CustomerCreateInput): Promise<Customer> {
         return this.prisma.customer.create({ data: createCustomerDto });
     }
 
@@ -17,9 +15,7 @@ export class CustomersRepository implements ICustomersRepository {
         return this.prisma.customer.findMany();
     }
 
-    async findOne(
-        uniqueInput: Prisma.CustomerWhereUniqueInput,
-    ): Promise<Customer | null> {
+    async findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<Customer | null> {
         const key = Object.keys(uniqueInput)[0];
         const value = Object.values(uniqueInput)[0];
         return this.prisma.customer.findUnique({
@@ -29,10 +25,7 @@ export class CustomersRepository implements ICustomersRepository {
         });
     }
 
-    async update(
-        email: string,
-        createCustomerDto: Prisma.CustomerUpdateInput,
-    ): Promise<Customer> {
+    async update(email: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<Customer> {
         return this.prisma.customer.update({
             where: { email },
             data: createCustomerDto,
