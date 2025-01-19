@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpStatus, Put } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -71,7 +71,7 @@ export class CustomersController {
         return this.customersService.findOne({ cpf: cpf });
     }
 
-    @Patch(':cpf')
+    @Put(':cpf')
     @ApiOperation({ summary: 'Updates a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
     update(@Param('cpf') cpf: string, @Body() updateCustomerDto: UpdateCustomerDto) {
