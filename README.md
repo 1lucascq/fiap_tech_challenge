@@ -1,85 +1,78 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Fast Food API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Uma API RESTful construída com NestJS para gerenciar pedidos, produtos e clientes de um restaurante fast food.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Visão Geral do Projeto
 
-## Description
+Esta aplicação fornece endpoints para:
+- Gerenciar produtos (criar, atualizar, deletar e buscar por categoria)
+- Lidar com registro e gerenciamento de clientes
+- Processar e rastrear pedidos através de diferentes status (Criado, Em Progresso, Pronto para Retirada, Concluído)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Stack Tecnológica
 
-## Project setup
+- NestJS (TypeScript)
+- PostgreSQL (Banco de Dados)
+- Prisma (ORM)
+- Docker & Docker Compose
+- Swagger (Documentação da API)
 
+## Dockerfile e docker-compose.yml
+
+### Dockerfile
+
+O Dockerfile define a imagem Docker para a aplicação. Ele usa a imagem base `node:18.20.5-alpine`, define o diretório de trabalho, copia os arquivos necessários do servidor NestJS, instala as dependências e expõe a porta 3000.
+
+### docker-compose.yml
+
+O arquivo `docker-compose.yml` cria os serviços do PostgreSQL e NestJS, além de definir a estrutura e rede para conexão dos serviços necessários para a aplicação. Ele configura as variáveis de ambiente, portas, volumes e healthcheck para garantir que os serviços estejam funcionando corretamente.
+
+## Passo a passo para rodar a aplicação
+
+### Pré-requisitos
+
+- Docker e Docker Compose instalados
+- Node.js 18.x ou superior
+- npm 9.x ou superior
+
+### Configuração de Desenvolvimento
+
+1. Clone o repositório:
 ```bash
-$ npm install
+git clone <repository-url>
+cd fast-food-api
 ```
-
-## Compile and run the project
-
+2. Instale as dependências:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
-
-## Run tests
-
+3. Inicie o ambiente de desenvolvimento usando Docker Compose:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up
 ```
+4. Aplique as migrações do banco de dados:
+```bash
+npx prisma migrate dev
+```
+5. Acesse a documentação da API:
+Abra seu navegador e navegue até `http://localhost:3000/api` para visualizar a documentação da API no Swagger.
 
-## Resources
+## Funcionalidades da Aplicação
 
-Check out a few resources that may come in handy when working with NestJS:
+### Produtos
+- **Criar Produto**: Adicionar um novo produto ao menu.
+- **Atualizar Produto**: Modificar detalhes de um produto existente.
+- **Deletar Produto**: Remover um produto do menu.
+- **Buscar Produtos por Categoria**: Recuperar produtos com base em sua categoria.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Clientes
+- **Registrar Cliente**: Criar um novo perfil de cliente.
+- **Atualizar Cliente**: Editar informações do cliente.
+- **Deletar Cliente**: Remover um perfil de cliente.
+- **Obter Detalhes do Cliente**: Recuperar detalhes de um cliente específico.
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Pedidos
+- **Criar Pedido**: Fazer um novo pedido.
+- **Atualizar Status do Pedido**: Alterar o status de um pedido (Criado, Em Progresso, Pronto para Retirada, Concluído).
+- **Obter Detalhes do Pedido**: Recuperar detalhes de um pedido específico.
+- **Listar Pedidos**: Obter uma lista de todos os pedidos com seus status.
