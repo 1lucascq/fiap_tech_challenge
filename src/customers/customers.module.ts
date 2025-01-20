@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { CustomersRepository } from './ports/customers.repository';
+import { CustomersRepository } from './adapters/customers.repository';
 import { CustomersController } from './customers.controller';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { UniqueEmailValidator } from './validations/uniqueEmail.validator';
@@ -14,6 +14,10 @@ import { UniqueCpfValidator } from './validations/uniqueCpf.validator';
         CustomersRepository,
         UniqueEmailValidator,
         UniqueCpfValidator,
+        {
+            provide: 'ICustomersRepository',
+            useClass: CustomersRepository,
+        },
     ],
     exports: [CustomersRepository],
 })

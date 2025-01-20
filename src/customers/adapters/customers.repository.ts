@@ -1,21 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Customer } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ICustomersRepository } from '../types';
+import { ResponseCustomerDto } from '../dto/response-customer.dto';
 
 @Injectable()
 export class CustomersRepository implements ICustomersRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(createCustomerDto: Prisma.CustomerCreateInput): Promise<Customer> {
-        return this.prisma.customer.create({ data: createCustomerDto });
+    async create(createCustomerDto: Prisma.CustomerCreateInput): Promise<ResponseCustomerDto> {
+        const customer = await this.prisma.customer.create({ data: createCustomerDto });
+        const customerResponse = new ResponseCustomerDto(customer);
+        return customerResponse;
     }
 
-    async findAll(): Promise<Customer[]> {
+    async findAll(): Promise<ResponseCustomerDto[]> {
         return this.prisma.customer.findMany();
     }
 
-    async findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<Customer | null> {
+    async findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<ResponseCustomerDto | null> {
         const key = Object.keys(uniqueInput)[0];
         const value = Object.values(uniqueInput)[0];
         return this.prisma.customer.findUnique({
@@ -25,14 +28,14 @@ export class CustomersRepository implements ICustomersRepository {
         });
     }
 
-    async update(email: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<Customer> {
+    async update(email: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<ResponseCustomerDto> {
         return this.prisma.customer.update({
             where: { email },
             data: createCustomerDto,
         });
     }
 
-    async delete(email: string): Promise<Customer> {
+    async delete(email: string): Promise<ResponseCustomerDto> {
         return this.prisma.customer.delete({ where: { email } });
     }
 }

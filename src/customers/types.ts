@@ -1,9 +1,12 @@
-import { Prisma, Customer } from '@prisma/client';
+import { ResponseCustomerDto } from './dto/response-customer.dto';
+import { Customer } from './entities/customer.entity';
+import { Prisma } from '@prisma/client';
 
+// PORT
 export interface ICustomersRepository {
-    create(createCustomerDto: Prisma.CustomerCreateInput): Promise<Customer>;
-    findAll(): Promise<Customer[]>;
-    findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<Customer | null>;
-    update(email: string, data: Prisma.CustomerUpdateInput): Promise<Customer>;
-    delete(email: string): Promise<Customer>;
+    create(customerEntity: Customer): Promise<ResponseCustomerDto>;
+    findAll(): Promise<ResponseCustomerDto[]>;
+    findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<ResponseCustomerDto>;
+    update(email: string, data: Customer): Promise<ResponseCustomerDto>;
+    delete(email: string): Promise<ResponseCustomerDto>;
 }

@@ -3,6 +3,7 @@ import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ResponseCustomerDto } from './dto/response-customer.dto';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -29,7 +30,7 @@ export class CustomersController {
             statusCode: 400,
         },
     })
-    create(@Body() createCustomerDto: CreateCustomerDto) {
+    create(@Body() createCustomerDto: CreateCustomerDto): Promise<ResponseCustomerDto> {
         return this.customersService.create(createCustomerDto);
     }
 
@@ -47,7 +48,7 @@ export class CustomersController {
             },
         ],
     })
-    findAll() {
+    findAll(): Promise<ResponseCustomerDto[]> {
         return this.customersService.findAll();
     }
 
@@ -64,21 +65,21 @@ export class CustomersController {
             name: 'John Doe',
         },
     })
-    findOne(@Param('cpf') cpf: string) {
+    findOne(@Param('cpf') cpf: string): Promise<ResponseCustomerDto> {
         return this.customersService.findOne({ cpf: cpf });
     }
 
     @Put(':cpf')
     @ApiOperation({ summary: 'Updates a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
-    update(@Param('cpf') cpf: string, @Body() updateCustomerDto: UpdateCustomerDto) {
+    update(@Param('cpf') cpf: string, @Body() updateCustomerDto: UpdateCustomerDto): Promise<ResponseCustomerDto> {
         return this.customersService.update(cpf, updateCustomerDto);
     }
 
     @Delete(':cpf')
     @ApiOperation({ summary: 'Removes a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
-    remove(@Param('cpf') cpf: string) {
+    remove(@Param('cpf') cpf: string): Promise<ResponseCustomerDto> {
         return this.customersService.remove(cpf);
     }
 }

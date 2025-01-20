@@ -1,33 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { CustomersRepository } from './ports/customers.repository';
+import { CustomersRepository } from './adapters/customers.repository';
 import { Prisma } from '@prisma/client';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { ResponseCustomerDto } from './dto/response-customer.dto';
+import { Customer } from './entities/customer.entity';
 
 type uniqueInput = Prisma.CustomerWhereUniqueInput;
 
 @Injectable()
 export class CustomersService {
-    constructor(private readonly customerRepository: CustomersRepository) {}
+    constructor(
+        @Inject('ICustomersRepository')
+        private readonly customerRepository: CustomersRepository,
+    ) {}
 
-    async create(createCustomerDto: CreateCustomerDto) {
-        const customer = await this.customerRepository.create(createCustomerDto);
+    async create(createCustomerDto: CreateCustomerDto): Promise<ResponseCustomerDto> {
+        const customerEntity = new Customer(createCustomerDto);
+        const customer = await this.customerRepository.create(customerEntity);
+
         return customer;
     }
 
-    async findAll() {
+    async findAll(): Promise<ResponseCustomerDto[]> {
         return this.customerRepository.findAll();
     }
 
-    async findOne(uniqueInput: uniqueInput) {
+    async findOne(uniqueInput: uniqueInput): Promise<ResponseCustomerDto> {
         return this.customerRepository.findOne(uniqueInput);
     }
 
-    async update(data: string, updateCustomerDto: UpdateCustomerDto) {
+    async update(data: string, updateCustomerDto: UpdateCustomerDto): Promise<ResponseCustomerDto> {
         return this.customerRepository.update(data, updateCustomerDto);
     }
 
-    async remove(data: string) {
+    async remove(data: string): Promise<ResponseCustomerDto> {
         return this.customerRepository.delete(data);
     }
 }
