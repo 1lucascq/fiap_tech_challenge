@@ -1,0 +1,51 @@
+services:
+    postgres:
+      image: postgres
+      container_name: fiap_tc1_postgres
+      hostname: fiap_tc1_postgres
+      environment:
+        POSTGRES_USER: fiap
+        POSTGRES_PASSWORD: fiap
+        POSTGRES_DB: mydb
+      ports:
+        - "5432:5432"
+      networks:
+        - fiap_tc1_network
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+    server:
+        build:
+            context: ./apps/server
+            dockerfile: Dockerfile
+        container_name: fiap_tc1_server
+        environment:
+            - MONGODB_URL=mongodb://fiap_tc1_mongodb:27017/fiap_tc1_demo?directConnection=true&replicaSet=rs0
+            - AWS_ENDPOINT=http://localstack:4566
+            - APP_PORT=${APP_PORT}
+        depends_on:
+            mongo:
+                condition: service_healthy
+            localstack:
+                condition: service_started
+        ports:
+            - '${APP_PORT}:${APP_PORT}'
+        networks:
+            - fiap_tc1_network
+        volumes:
+            - ./apps/server:/app
+            - /app/node_modules
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:${APP_PORT}/health']
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
+networks:
+    fiap_tc1_network:
+        driver: bridge
+
+volumes:
+    mongo1_data:
+    mongo1_config:
