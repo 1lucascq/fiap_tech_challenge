@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
-import { OrdersRepository } from './ports/orders.repository';
+import { OrdersRepository } from './adapters/orders.repository';
 import { ResponseOrderDto } from './dto/response-order.dto';
 import { OrderStatus } from './types';
 
 @Injectable()
 export class OrdersService {
-    constructor(private readonly ordersRepository: OrdersRepository) {}
+    constructor(
+        @Inject('IOrdersRepository')
+        private readonly ordersRepository: OrdersRepository,
+    ) {}
 
     async create(createOrderDto: CreateOrderDto): Promise<ResponseOrderDto> {
         const orderEntity = new Order(createOrderDto);

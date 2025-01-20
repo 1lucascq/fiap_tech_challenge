@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ResponseOrderDto } from '../dto/response-order.dto';
-import { OrderStatus } from '../types';
+import { IOrdersRepository, OrderStatus } from '../types';
 
 const orderInclude = {
     customer: {
@@ -27,7 +27,7 @@ const orderInclude = {
 } satisfies Prisma.OrderInclude;
 
 @Injectable()
-export class OrdersRepository {
+export class OrdersRepository implements IOrdersRepository {
     constructor(private readonly prisma: PrismaService) {}
 
     async create(orderEntity: Prisma.OrderCreateInput): Promise<ResponseOrderDto> {
