@@ -2,14 +2,13 @@ FROM node:18.20.5-alpine
 
 WORKDIR /app
 
-ENV APP_PORT=3000
-
 COPY package*.json ./
+COPY prisma ./prisma/
 
 RUN npm install
 
 COPY . .
 
-EXPOSE ${APP_PORT}
+EXPOSE 3000
 
-CMD sh -c "npm run start:dev && npx prisma generate"
+CMD ["npm", "run", "start:dev"]

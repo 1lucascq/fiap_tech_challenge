@@ -1,42 +1,51 @@
 services:
     postgres:
-      image: postgres
-      container_name: fiap_tc1_postgres
-      hostname: fiap_tc1_postgres
-      environment:
-        POSTGRES_USER: fiap
-        POSTGRES_PASSWORD: fiap
-        POSTGRES_DB: mydb
-      ports:
-        - "5432:5432"
-      networks:
-        - fiap_tc1_network
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
-
-    server:
-        build:
-            context: ./apps/server
-            dockerfile: Dockerfile
-        container_name: fiap_tc1_server
+        image: postgres:latest
+        container_name: fiap_tc1_postgres
+        hostname: fiap_tc1_postgres
         environment:
-            - MONGODB_URL=mongodb://fiap_tc1_mongodb:27017/fiap_tc1_demo?directConnection=true&replicaSet=rs0
-            - AWS_ENDPOINT=http://localstack:4566
-            - APP_PORT=${APP_PORT}
-        depends_on:
-            mongo:
-                condition: service_healthy
-            localstack:
-                condition: service_started
+            POSTGRES_USER: fiap
+            POSTGRES_PASSWORD: fiap
+            POSTGRES_DB: fiap_tc1_db
         ports:
-            - '${APP_PORT}:${APP_PORT}'
+            - '5432:5432'
         networks:
             - fiap_tc1_network
         volumes:
-            - ./apps/server:/app
-            - /app/node_modules
+            - postgres_data:/var/lib/postgresql/data
         healthcheck:
-            test: ['CMD', 'curl', '-f', 'http://localhost:${APP_PORT}/health']
+            test: ['CMD-SHELL', 'pg_isready -d fiap_tc1_db -U fiap']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    server:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        container_name: fiap_tc1_server
+        environment:
+            - DATABASE_URL=postgresql://fiap:fiap@fiap_tc1_postgres:5432/fiap_tc1_db?schema=public
+            - AWS_ENDPOINT=http://localstack:4566
+        depends_on:
+            postgres:
+                condition: service_healthy
+        ports:
+            - 3000:3000
+        networks:
+            - fiap_tc1_network
+        volumes:
+            - .:/app
+            - /app/node_modules
+        command: >
+            sh -c "
+            npx prisma generate &&
+            npx prisma migrate dev --name init &&
+            npx prisma migrate deploy &&
+            npx prisma db seed &&
+            npm run start:dev"
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
             interval: 30s
             timeout: 10s
             retries: 3
@@ -47,5 +56,4 @@ networks:
         driver: bridge
 
 volumes:
-    mongo1_data:
-    mongo1_config:
+    postgres_data:
