@@ -55,7 +55,6 @@ export class ProductsController {
         ],
     })
     findAll(@Query('category') category: string) {
-        console.log('hey', category);
         if (category) {
             return this.productsService.findByCategory(category);
         } else {
