@@ -62,7 +62,7 @@ cd fiap_tech_challenge_fase_01
 
 2. Inicie o ambiente de desenvolvimento usando Docker Compose:
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 3. Acesse a documentação da API:
