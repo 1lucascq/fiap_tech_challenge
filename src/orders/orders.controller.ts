@@ -96,7 +96,11 @@ export class OrdersController {
     @ApiBody({
         description: 'New status for the order',
         enum: OrderStatus,
-        example: OrderStatus.IN_PROGRESS,
+        examples: {
+            example: {
+                value: { status: OrderStatus.IN_PROGRESS },
+            },
+        },
     })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -107,8 +111,8 @@ export class OrdersController {
         status: HttpStatus.NOT_FOUND,
         description: 'Order not found.',
     })
-    updateStatus(@Param('id') id: string, @Body() newStatus: OrderStatus): Promise<ResponseOrderDto> {
-        return this.ordersService.updateStatus(+id, newStatus);
+    updateStatus(@Param('id') id: string, @Body() newStatus: { status: OrderStatus }): Promise<ResponseOrderDto> {
+        return this.ordersService.updateStatus(+id, newStatus.status);
     }
 
     @Delete(':id')
