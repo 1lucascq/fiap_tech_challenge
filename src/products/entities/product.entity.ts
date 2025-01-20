@@ -13,7 +13,7 @@ export class Product {
 
     constructor(createProductDto: CreateProductDto) {
         this.name = createProductDto.name;
-        this.ingredients = JSON.stringify(createProductDto.ingredients);
+        this.ingredients = JSON.stringify(createProductDto.ingredients) || JSON.stringify([]);
         this.price = createProductDto.price;
         this.category = {
             connectOrCreate: {

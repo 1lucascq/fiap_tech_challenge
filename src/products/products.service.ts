@@ -14,7 +14,7 @@ export class ProductsService {
     async create(createProductDto: CreateProductDto) {
         const productEntity = new Product(createProductDto);
         const product = await this.productsRepository.create(productEntity);
-        return { error: false, product };
+        return product;
     }
 
     async findAll() {
