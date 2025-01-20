@@ -12,7 +12,7 @@ export class CustomersService {
 
     async create(createCustomerDto: CreateCustomerDto) {
         const customer = await this.customerRepository.create(createCustomerDto);
-        return { error: false, customer };
+        return customer;
     }
 
     async findAll() {

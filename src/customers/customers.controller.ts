@@ -15,12 +15,9 @@ export class CustomersController {
         status: HttpStatus.CREATED,
         description: 'Customer successfully created.',
         example: {
-            error: false,
-            customer: {
-                id: '1',
-                name: 'John Doe',
-                email: 'johndoe@example.com',
-            },
+            id: '1',
+            name: 'John Doe',
+            email: 'johndoe@example.com',
         },
     })
     @ApiResponse({
