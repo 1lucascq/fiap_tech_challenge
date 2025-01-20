@@ -3,6 +3,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseProductDto } from './dto/response-product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -33,7 +34,7 @@ export class ProductsController {
             statusCode: 400,
         },
     })
-    create(@Body() createProductDto: CreateProductDto) {
+    create(@Body() createProductDto: CreateProductDto): Promise<ResponseProductDto> {
         return this.productsService.create(createProductDto);
     }
 
@@ -59,7 +60,7 @@ export class ProductsController {
             },
         ],
     })
-    findAll(@Query('category') category: string) {
+    findAll(@Query('category') category: string): Promise<ResponseProductDto[]> {
         if (category) {
             return this.productsService.findByCategory(category);
         }
@@ -86,7 +87,7 @@ export class ProductsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Product not found.',
     })
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id') id: string): Promise<ResponseProductDto> {
         return this.productsService.findOne({ id: +id });
     }
 
@@ -114,7 +115,7 @@ export class ProductsController {
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid product data provided.',
     })
-    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<ResponseProductDto> {
         return this.productsService.update(+id, updateProductDto);
     }
 
@@ -138,7 +139,7 @@ export class ProductsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Product not found.',
     })
-    remove(@Param('id') id: string) {
+    remove(@Param('id') id: string): Promise<ResponseProductDto> {
         return this.productsService.remove(+id);
     }
 }
