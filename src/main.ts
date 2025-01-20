@@ -23,7 +23,11 @@ async function bootstrap() {
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('doc', app, document);
+    SwaggerModule.setup('doc', app, document, {
+        customSiteTitle: 'Fast Food App API Docs',
+        useGlobalPrefix: false,
+        explorer: false,
+    });
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
