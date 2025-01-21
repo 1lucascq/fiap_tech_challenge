@@ -3,6 +3,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseProductDto } from './dto/response-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -114,8 +115,8 @@ export class ProductsController {
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid product data provided.',
     })
-    update(@Param('id') id: string, @Body() createProductDto: CreateProductDto): Promise<ResponseProductDto> {
-        return this.productsService.update(+id, createProductDto);
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<ResponseProductDto> {
+        return this.productsService.update(+id, updateProductDto);
     }
 
     @Delete(':id')
