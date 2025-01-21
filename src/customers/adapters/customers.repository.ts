@@ -35,7 +35,7 @@ export class CustomersRepository implements ICustomersRepository {
         });
     }
 
-    async delete(email: string): Promise<ResponseCustomerDto> {
-        return this.prisma.customer.delete({ where: { email } });
+    async delete(cpf: string): Promise<ResponseCustomerDto> {
+        return this.prisma.customer.delete({ where: { cpf } });
     }
 }
