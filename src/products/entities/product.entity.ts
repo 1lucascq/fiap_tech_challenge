@@ -2,7 +2,7 @@ import { CreateProductDto } from '../dto/create-product.dto';
 
 export class Product {
     name: string;
-    ingredients: string;
+    ingredients: string[];
     price: number;
     category: {
         connectOrCreate: {
@@ -13,7 +13,7 @@ export class Product {
 
     constructor(createProductDto: CreateProductDto) {
         this.name = createProductDto.name;
-        this.ingredients = JSON.stringify(createProductDto.ingredients) || JSON.stringify([]);
+        this.ingredients = createProductDto.ingredients || [];
         this.price = createProductDto.price;
         this.category = {
             connectOrCreate: {

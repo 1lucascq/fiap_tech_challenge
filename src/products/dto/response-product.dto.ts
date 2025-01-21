@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 interface ProductRepository {
     id: number;
     name: string;
-    ingredients: string;
+    ingredients: string[];
     categoryId: number;
     price: number;
     createdAt: Date;
@@ -35,10 +35,10 @@ export class ResponseProductDto {
     @ApiProperty({
         name: 'ingredients',
         description: 'The ingredients of the product.',
-        example: '["Bread","Hamburger","Cheese","Lettuce","Tomato"]',
+        example: ['Bread', 'Hamburger', 'Cheese', 'Lettuce', 'Tomato'],
     })
     @IsString()
-    readonly ingredients: string;
+    readonly ingredients: string[];
 
     @ApiProperty({
         name: 'categoryId',

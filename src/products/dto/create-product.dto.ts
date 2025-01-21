@@ -20,7 +20,7 @@ export class CreateProductDto {
 
     @ApiProperty({
         description: 'The ingredients of the product.',
-        example: '[Bread, Burger, Cheese, Lettuce, Tomato, Egg]',
+        example: ['Bread', 'Burger', 'Everything'],
     })
     @IsArray()
     @IsOptional()
@@ -28,7 +28,7 @@ export class CreateProductDto {
 
     @ApiProperty({
         description: 'The final price of the product.',
-        example: '23.90',
+        example: 23.9,
     })
     @IsNumber()
     readonly price: number;

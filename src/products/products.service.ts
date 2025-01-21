@@ -3,7 +3,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductsRepository } from './adapters/products.repository';
 import { Product } from './entities/product.entity';
 import { Prisma } from '@prisma/client';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { ResponseProductDto } from './dto/response-product.dto';
 
 type uniqueInput = Prisma.ProductWhereUniqueInput;
@@ -33,8 +32,8 @@ export class ProductsService {
         return this.productsRepository.findOne(id);
     }
 
-    async update(id: number, updateProductDto: UpdateProductDto): Promise<ResponseProductDto> {
-        const productEntity = new Product(updateProductDto);
+    async update(id: number, createProductDto: CreateProductDto): Promise<ResponseProductDto> {
+        const productEntity = new Product(createProductDto);
         return this.productsRepository.update(id, productEntity);
     }
 

@@ -39,7 +39,7 @@ export class ProductsRepository implements IProductsRepository {
         });
     }
 
-    async update(id: number, createProductDto: Prisma.ProductUpdateInput): Promise<ResponseProductDto> {
+    async update(id: number, createProductDto: Prisma.ProductCreateInput): Promise<ResponseProductDto> {
         return this.prisma.product.update({
             where: { id },
             data: createProductDto,
