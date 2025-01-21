@@ -56,7 +56,7 @@ Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas
 
 1. Clone o repositório:
 ```bash
-git clone <git@github.com:1lucascq/fiap_tech_challenge_fase_01.git>
+git clone git@github.com:1lucascq/fiap_tech_challenge_fase_01.git
 cd fiap_tech_challenge_fase_01
 ```
 
