@@ -48,13 +48,13 @@ model OrderProduct {
 }
 
 model Order {
-    id         Int      @id @default(autoincrement())
-    customer   Customer @relation(fields: [customerId], references: [id])
-    customerId Int
+    id         Int       @id @default(autoincrement())
+    customer   Customer? @relation(fields: [customerId], references: [id])
+    customerId Int?
     total      Float
     status     String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
 
     products OrderProduct[]
 }
