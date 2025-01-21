@@ -26,7 +26,7 @@ Esta aplicação fornece endpoints para:
 
 ### Dockerfile
 
-O Dockerfile define a imagem Docker para a aplicação. Ele usa a imagem base `node:18.20.5-alpine`, define o diretório de trabalho, copia os arquivos necessários do servidor NestJS, instala as dependências e expõe a porta 3000.
+O Dockerfile define a imagem Docker para a aplicação. Ele usa a imagem base `node:22.13.5-alpine`, define o diretório de trabalho, copia os arquivos necessários do servidor NestJS, instala as dependências e expõe a porta 3000.
 A imagem base da aplicação não possui vulnerabilidades detectadas e é uma versão reduzida que pode ser consultada aqui: [node:22.13.0-alpine](https://hub.docker.com/layers/library/node/22.13.0-alpine/images/sha256-133cdce957f50f47236d6d926592fb1db7a120ac3c33191e611b60dfab63e324)
 
 ### docker-compose.yml
