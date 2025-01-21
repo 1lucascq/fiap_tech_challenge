@@ -27,7 +27,7 @@ async function seedProducts({ sandwichCategory, drinkCategory, dessertCategory }
     const xBurger = await prisma.product.create({
         data: {
             name: 'X-Burger',
-            ingredients: JSON.stringify(['Bread', 'Beef Patty', 'Cheese', 'Lettuce', 'Tomato']),
+            ingredients: ['Bread', 'Beef Patty', 'Cheese', 'Lettuce', 'Tomato'],
             category: { connect: { id: sandwichCategory.id } },
             price: 25.9,
         },
@@ -36,7 +36,7 @@ async function seedProducts({ sandwichCategory, drinkCategory, dessertCategory }
     const xEgg = await prisma.product.create({
         data: {
             name: 'X-Egg',
-            ingredients: JSON.stringify(['Bread', 'Beef Patty', 'Egg', 'Cheese', 'Lettuce', 'Tomato']),
+            ingredients: ['Bread', 'Beef Patty', 'Egg', 'Cheese', 'Lettuce', 'Tomato'],
             category: { connect: { id: sandwichCategory.id } },
             price: 27.9,
         },
@@ -45,6 +45,7 @@ async function seedProducts({ sandwichCategory, drinkCategory, dessertCategory }
     const cookie = await prisma.product.create({
         data: {
             name: 'Cookie',
+            ingredients: [''],
             category: { connect: { id: dessertCategory.id } },
             price: 7.9,
         },
@@ -53,6 +54,7 @@ async function seedProducts({ sandwichCategory, drinkCategory, dessertCategory }
     const cola = await prisma.product.create({
         data: {
             name: 'Cola',
+            ingredients: [],
             category: { connect: { id: drinkCategory.id } },
             price: 7.9,
         },
