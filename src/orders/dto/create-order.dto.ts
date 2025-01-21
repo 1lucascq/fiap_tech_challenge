@@ -1,4 +1,4 @@
-import { IsArray, IsNumber } from 'class-validator';
+import { IsArray, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export interface OrderProduct {
@@ -8,13 +8,16 @@ export interface OrderProduct {
 
 export class CreateOrderDto {
     @ApiProperty({
+        name: 'customerId',
         description: 'The customer ID.',
         example: 1,
     })
     @IsNumber()
+    @IsOptional()
     readonly customerId: number;
 
     @ApiProperty({
+        name: 'products',
         description: 'The products in the order.',
         example: [{ productId: 1, quantity: 2 }],
     })
@@ -22,6 +25,7 @@ export class CreateOrderDto {
     readonly products: OrderProduct[];
 
     @ApiProperty({
+        name: 'total',
         description: 'The total amount of the order.',
         example: 100.55,
     })

@@ -5,7 +5,7 @@ export class Order {
         connect: {
             id: number;
         };
-    };
+    } | null;
     total: number;
     status: string;
     products: {
@@ -13,11 +13,13 @@ export class Order {
     };
 
     constructor(createOrderDto: CreateOrderDto) {
-        this.customer = {
-            connect: {
-                id: createOrderDto.customerId,
-            },
-        };
+        if (createOrderDto.customerId) {
+            this.customer = {
+                connect: {
+                    id: createOrderDto.customerId,
+                },
+            };
+        }
         this.total = createOrderDto.total;
         this.status = 'CREATED';
         this.products = {

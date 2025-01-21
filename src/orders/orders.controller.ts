@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpStatus, Get, Param, Put, Delete, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrderStatus } from './types';
 import { ResponseOrderDto } from './dto/response-order.dto';
 
@@ -87,50 +87,52 @@ export class OrdersController {
     }
 
     @Put(':id')
-    @ApiOperation({ summary: 'Update order status.' })
-    @ApiParam({
-        name: 'id',
-        description: 'Order ID',
-        example: 1,
-    })
-    @ApiBody({
-        description: 'New status for the order',
-        enum: OrderStatus,
-        examples: {
-            example: {
-                value: { status: OrderStatus.IN_PROGRESS },
-            },
-        },
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Order status updated successfully.',
-        type: ResponseOrderDto,
-    })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
-        description: 'Order not found.',
-    })
+    @ApiExcludeEndpoint()
+    // @ApiOperation({ summary: 'Update order status.' })
+    // @ApiParam({
+    //     name: 'id',
+    //     description: 'Order ID',
+    //     example: 1,
+    // })
+    // @ApiBody({
+    //     description: 'New status for the order',
+    //     enum: OrderStatus,
+    //     examples: {
+    //         example: {
+    //             value: { status: OrderStatus.IN_PROGRESS },
+    //         },
+    //     },
+    // })
+    // @ApiResponse({
+    //     status: HttpStatus.OK,
+    //     description: 'Order status updated successfully.',
+    //     type: ResponseOrderDto,
+    // })
+    // @ApiResponse({
+    //     status: HttpStatus.NOT_FOUND,
+    //     description: 'Order not found.',
+    // })
     updateStatus(@Param('id') id: string, @Body() newStatus: { status: OrderStatus }): Promise<ResponseOrderDto> {
         return this.ordersService.updateStatus(+id, newStatus.status);
     }
 
     @Delete(':id')
-    @ApiOperation({ summary: 'Delete an order.' })
-    @ApiParam({
-        name: 'id',
-        description: 'Order ID',
-        example: 1,
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Order deleted successfully.',
-        type: ResponseOrderDto,
-    })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
-        description: 'Order not found.',
-    })
+    @ApiExcludeEndpoint()
+    // @ApiOperation({ summary: 'Delete an order.' })
+    // @ApiParam({
+    //     name: 'id',
+    //     description: 'Order ID',
+    //     example: 1,
+    // })
+    // @ApiResponse({
+    //     status: HttpStatus.OK,
+    //     description: 'Order deleted successfully.',
+    //     type: ResponseOrderDto,
+    // })
+    // @ApiResponse({
+    //     status: HttpStatus.NOT_FOUND,
+    //     description: 'Order not found.',
+    // })
     remove(@Param('id') id: string): Promise<ResponseOrderDto> {
         return this.ordersService.remove(+id);
     }

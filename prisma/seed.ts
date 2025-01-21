@@ -88,7 +88,7 @@ async function seedOrders({ xBurger, xEgg, cookie, cola, john, jane }) {
         data: {
             customer: { connect: { id: john.id } },
             total: 61.7,
-            status: 'ONGOING',
+            status: 'IN_PROGRESS',
             products: {
                 create: [
                     {
@@ -128,7 +128,7 @@ async function seedOrders({ xBurger, xEgg, cookie, cola, john, jane }) {
         data: {
             customer: { connect: { id: jane.id } },
             total: 35.8,
-            status: 'CREATED',
+            status: 'READY_FOR_PICKUP',
             products: {
                 create: [
                     {

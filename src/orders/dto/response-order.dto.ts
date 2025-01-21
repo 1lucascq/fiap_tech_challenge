@@ -44,6 +44,7 @@ interface OrderCustomerResponse {
 
 export class ResponseOrderDto {
     @ApiProperty({
+        name: 'id',
         description: 'The id of the order.',
         example: 1,
     })
@@ -51,6 +52,7 @@ export class ResponseOrderDto {
     readonly id: number;
 
     @ApiProperty({
+        name: 'status',
         description: 'The status of the order.',
         example: OrderStatus.IN_PROGRESS,
         enum: OrderStatus,
@@ -59,13 +61,15 @@ export class ResponseOrderDto {
     readonly status: OrderStatus;
 
     @ApiProperty({
-        description: 'The customer ID.',
-        example: 1,
+        name: 'customer',
+        description: 'The customer data OR null.',
+        example: { id: 1, name: 'John Doe', cpf: '12345678901', email: 'email@test.com' },
     })
     @IsNumber()
     readonly customer: OrderCustomerResponse;
 
     @ApiProperty({
+        name: 'products',
         description: 'The products in the order.',
         example: [{ productId: 1, quantity: 2 }],
     })
@@ -73,6 +77,7 @@ export class ResponseOrderDto {
     readonly products: OrderProductResponse[];
 
     @ApiProperty({
+        name: 'createdAt',
         description: 'The creation date of the order.',
         example: '2025-01-19T22:00:28.374Z',
     })
@@ -80,6 +85,7 @@ export class ResponseOrderDto {
     readonly createdAt: Date;
 
     @ApiProperty({
+        name: 'updatedAt',
         description: 'The creation date of the order.',
         example: '2025-01-19T22:00:28.374Z',
     })
@@ -87,6 +93,7 @@ export class ResponseOrderDto {
     readonly updatedAt: Date;
 
     @ApiProperty({
+        name: 'total',
         description: 'The total amount of the order.',
         example: 100.55,
     })
@@ -96,12 +103,16 @@ export class ResponseOrderDto {
     constructor(order: OrderRepository) {
         this.id = order.id;
         this.status = order.status as OrderStatus;
-        this.customer = {
-            id: order.customer.id,
-            name: order.customer.name,
-            cpf: order.customer.cpf,
-            email: order.customer.email,
-        };
+        if (order.customer) {
+            this.customer = {
+                id: order.customer.id,
+                name: order.customer.name,
+                cpf: order.customer.cpf,
+                email: order.customer.email,
+            };
+        } else {
+            this.customer = null;
+        }
         this.products = order.products.map((item) => ({
             id: item.product.id,
             name: item.product.name,
