@@ -28,9 +28,9 @@ export class CustomersRepository implements ICustomersRepository {
         });
     }
 
-    async update(email: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<ResponseCustomerDto> {
+    async update(cpf: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<ResponseCustomerDto> {
         return this.prisma.customer.update({
-            where: { email },
+            where: { cpf },
             data: createCustomerDto,
         });
     }

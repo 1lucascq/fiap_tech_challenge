@@ -30,8 +30,8 @@ export class CustomersService {
         return this.customerRepository.findOne(uniqueInput);
     }
 
-    async update(data: string, updateCustomerDto: UpdateCustomerDto): Promise<ResponseCustomerDto> {
-        return this.customerRepository.update(data, updateCustomerDto);
+    async update(cpf: string, updateCustomerDto: UpdateCustomerDto): Promise<ResponseCustomerDto> {
+        return this.customerRepository.update(cpf, updateCustomerDto);
     }
 
     async remove(data: string): Promise<ResponseCustomerDto> {
