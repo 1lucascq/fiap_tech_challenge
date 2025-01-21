@@ -98,12 +98,15 @@ Abaixo temos uma descrição básica sobre cada endpoint da aplicação. Maiores
 
 ### Pedidos
 - **Criar Pedido**: `POST /orders`
-  - Fazer um novo pedido com produtos e quantidades
+  - Fazer um novo pedido com produtos e quantidades de cada produto
 - **Atualizar Status do Pedido**: `PUT /orders/:id`
   - Alterar o status de um pedido (CREATED, IN_PROGRESS, READY_FOR_PICKUP, CONCLUDED)
+  - Usado para mudar o status dos pedidos
 - **Obter Detalhes do Pedido**: `GET /orders/:id`
   - Recuperar detalhes de um pedido específico
 - **Listar Pedidos**: `GET /orders`
   - Obter uma lista de todos os pedidos
+  - Os pedidos são listados em ordem de criação
 - **Listar Pedidos por Status**: `GET /orders?status=IN_PROGRESS`
-  - Filtrar pedidos por status específico
+  - Filtrar pedidos por status específico. Usado para listar pedidos no painel
+  - Os pedidos são listados em ordem de criação
