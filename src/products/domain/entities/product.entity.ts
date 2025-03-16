@@ -1,4 +1,4 @@
-import { CreateProductDto } from '../dto/create-product.dto';
+import { CreateProductDto } from '../../dto/create-product.dto';
 
 export class Product {
     name: string;

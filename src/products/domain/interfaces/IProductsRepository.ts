@@ -1,5 +1,5 @@
-import { ResponseProductDto } from './dto/response-product.dto';
-import { Product } from './entities/product.entity';
+import { ResponseProductDto } from '../../dto/response-product.dto';
+import { Product } from '../entities/product.entity';
 import { Prisma } from '@prisma/client';
 
 // PORT

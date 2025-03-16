@@ -1,14 +1,26 @@
 import { Controller, Get, Post, Body, Param, Delete, HttpStatus, Patch, Query } from '@nestjs/common';
-import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseProductDto } from './dto/response-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductUseCase } from './useCases/CreateProductUseCase';
+import { GetAllProductsUseCase } from './useCases/GetAllProductsUseCase';
+import { GetProductsByCategoryUseCase } from './useCases/GetProductsByCategoryUseCase';
+import { GetProductUseCase } from './useCases/GetProductUseCase';
+import { UpdateProductUseCase } from './useCases/UpdateProductUseCase';
+import { DeleteProductUseCase } from './useCases/DeleteProductUseCase';
 
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) {}
+    constructor(
+        private readonly createProductUseCase: CreateProductUseCase,
+        private readonly getAllProductsUseCase: GetAllProductsUseCase,
+        private readonly getProductsByCategoryUseCase: GetProductsByCategoryUseCase,
+        private readonly getProductUseCase: GetProductUseCase,
+        private readonly updateProductUseCase: UpdateProductUseCase,
+        private readonly deleteProductUseCase: DeleteProductUseCase,
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Register a new product.' })
@@ -35,7 +47,7 @@ export class ProductsController {
         },
     })
     create(@Body() createProductDto: CreateProductDto): Promise<ResponseProductDto> {
-        return this.productsService.create(createProductDto);
+        return this.createProductUseCase.execute(createProductDto);
     }
 
     @Get()
@@ -62,9 +74,9 @@ export class ProductsController {
     })
     findAll(@Query('category') category: string): Promise<ResponseProductDto[]> {
         if (category) {
-            return this.productsService.findByCategory(category);
+            return this.getProductsByCategoryUseCase.execute(category);
         }
-        return this.productsService.findAll();
+        return this.getAllProductsUseCase.execute();
     }
 
     @Get(':id')
@@ -88,7 +100,7 @@ export class ProductsController {
         description: 'Product not found.',
     })
     findOne(@Param('id') id: string): Promise<ResponseProductDto> {
-        return this.productsService.findOne({ id: +id });
+        return this.getProductUseCase.execute({ id: +id });
     }
 
     @Patch(':id')
@@ -116,7 +128,7 @@ export class ProductsController {
         description: 'Invalid product data provided.',
     })
     update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<ResponseProductDto> {
-        return this.productsService.update(+id, updateProductDto);
+        return this.updateProductUseCase.execute(+id, updateProductDto);
     }
 
     @Delete(':id')
@@ -140,6 +152,6 @@ export class ProductsController {
         description: 'Product not found.',
     })
     remove(@Param('id') id: string): Promise<ResponseProductDto> {
-        return this.productsService.remove(+id);
+        return this.deleteProductUseCase.execute(+id);
     }
 }

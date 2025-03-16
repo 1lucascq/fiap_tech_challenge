@@ -1,38 +1,31 @@
 import {
     registerDecorator,
-    ValidationArguments,
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { ProductsService } from '../products.service';
-import { CreateProductDto } from '../dto/create-product.dto';
+import { ProductValidationService } from './services/productValidationService';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
-export class UniqueProductNameValidator
-    implements ValidatorConstraintInterface
-{
-    constructor(private readonly productsService: ProductsService) {}
+export class UniqueProductNameValidator implements ValidatorConstraintInterface {
+    constructor(private readonly validationService: ProductValidationService) {}
 
-    async validate(
-        productName: string,
-        validationArguments?: ValidationArguments,
-    ): Promise<boolean> {
-        const productExists = await this.productsService.findOne({
+    async validate(productName: string): Promise<boolean> {
+        const productExists = await this.validationService.findOne({
             name: productName,
         });
         return !productExists;
     }
 
-    defaultMessage(validationArguments?: ValidationArguments): string {
-        return 'This product is already registered.';
+    defaultMessage(): string {
+        return 'This product name is already in use';
     }
 }
 
 export const UniqueProductName = (validationOptions: ValidationOptions) => {
-    return (object: CreateProductDto, property: string) => {
+    return (object: object, property: string) => {
         registerDecorator({
             target: object.constructor,
             propertyName: property,
@@ -40,6 +33,5 @@ export const UniqueProductName = (validationOptions: ValidationOptions) => {
             constraints: [],
             validator: UniqueProductNameValidator,
         });
-        ProductsService;
     };
 };
