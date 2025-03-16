@@ -1,14 +1,24 @@
 import { Controller, Get, Post, Body, Param, Delete, HttpStatus, Put } from '@nestjs/common';
-import { CustomersService } from './customers.service';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { ResponseCustomerDto } from './dto/response-customer.dto';
+import { CreateCustomerUseCase } from './useCases/CreateCustomerUseCase';
+import { GetAllCustomersUseCase } from './useCases/GetAllCustomersUseCase';
+import { GetCustomerUseCase } from './useCases/GetCustomerUseCase';
+import { UpdateCustomerUseCase } from './useCases/UpdateCustomerUseCase';
+import { DeleteCustomerUseCase } from './useCases/DeleteCustomerUseCase';
 
 @ApiTags('Customers')
 @Controller('customers')
 export class CustomersController {
-    constructor(private readonly customersService: CustomersService) {}
+    constructor(
+        private readonly createCustomerUseCase: CreateCustomerUseCase,
+        private readonly getAllCustomersUseCase: GetAllCustomersUseCase,
+        private readonly getCustomerUseCase: GetCustomerUseCase,
+        private readonly updateCustomerUseCase: UpdateCustomerUseCase,
+        private readonly deleteCustomerUseCase: DeleteCustomerUseCase,
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Register a new customer.' })
@@ -31,7 +41,7 @@ export class CustomersController {
         },
     })
     create(@Body() createCustomerDto: CreateCustomerDto): Promise<ResponseCustomerDto> {
-        return this.customersService.create(createCustomerDto);
+        return this.createCustomerUseCase.execute(createCustomerDto);
     }
 
     @Get()
@@ -49,7 +59,7 @@ export class CustomersController {
         ],
     })
     findAll(): Promise<ResponseCustomerDto[]> {
-        return this.customersService.findAll();
+        return this.getAllCustomersUseCase.execute();
     }
 
     @Get(':cpf')
@@ -66,20 +76,20 @@ export class CustomersController {
         },
     })
     findOne(@Param('cpf') cpf: string): Promise<ResponseCustomerDto> {
-        return this.customersService.findOne({ cpf: cpf });
+        return this.getCustomerUseCase.execute({ cpf });
     }
 
     @Put(':cpf')
     @ApiOperation({ summary: 'Updates a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
     update(@Param('cpf') cpf: string, @Body() updateCustomerDto: UpdateCustomerDto): Promise<ResponseCustomerDto> {
-        return this.customersService.update(cpf, updateCustomerDto);
+        return this.updateCustomerUseCase.execute(cpf, updateCustomerDto);
     }
 
     @Delete(':cpf')
     @ApiOperation({ summary: 'Removes a specific customer.' })
     @ApiParam({ name: 'cpf', description: "The customer's CPF." })
     remove(@Param('cpf') cpf: string): Promise<ResponseCustomerDto> {
-        return this.customersService.remove(cpf);
+        return this.deleteCustomerUseCase.execute(cpf);
     }
 }

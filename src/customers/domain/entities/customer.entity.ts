@@ -1,4 +1,4 @@
-import { CreateCustomerDto } from '../dto/create-customer.dto';
+import { CreateCustomerDto } from '../../dto/create-customer.dto';
 
 export class Customer {
     name: string;
