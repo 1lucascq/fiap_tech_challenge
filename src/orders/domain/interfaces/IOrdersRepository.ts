@@ -1,5 +1,5 @@
-import { ResponseOrderDto } from './dto/response-order.dto';
-import { Order } from './entities/order.entity';
+import { ResponseOrderDto } from '../../dto/response-order.dto';
+import { Order } from '../entities/order.entity';
 
 export enum OrderStatus {
     CREATED = 'CREATED',

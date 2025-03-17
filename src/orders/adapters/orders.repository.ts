@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ResponseOrderDto } from '../dto/response-order.dto';
-import { IOrdersRepository, OrderStatus } from '../types';
+import { IOrdersRepository, OrderStatus } from '../domain/interfaces/IOrdersRepository';
+import { OrderPresenter } from '../presenter/orderPresenter';
 
 const orderInclude = {
     customer: {
@@ -28,7 +29,10 @@ const orderInclude = {
 
 @Injectable()
 export class OrdersRepository implements IOrdersRepository {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly orderPresenter: OrderPresenter,
+    ) {}
 
     async create(orderEntity: Prisma.OrderCreateInput): Promise<ResponseOrderDto> {
         const order = await this.prisma.order.create({
@@ -36,7 +40,7 @@ export class OrdersRepository implements IOrdersRepository {
             include: orderInclude,
         });
 
-        return new ResponseOrderDto(order);
+        return this.orderPresenter.toResponseDto(order);
     }
 
     async findAll(): Promise<ResponseOrderDto[]> {
@@ -47,7 +51,7 @@ export class OrdersRepository implements IOrdersRepository {
             },
         });
 
-        return orders.map((order) => new ResponseOrderDto(order));
+        return this.orderPresenter.toResponseDtoList(orders);
     }
 
     async findByStatus(status: OrderStatus): Promise<ResponseOrderDto[]> {
@@ -59,7 +63,7 @@ export class OrdersRepository implements IOrdersRepository {
             },
         });
 
-        return orders.map((order) => new ResponseOrderDto(order));
+        return this.orderPresenter.toResponseDtoList(orders);
     }
 
     async updateStatus(id: number, newStatus: OrderStatus): Promise<ResponseOrderDto> {
@@ -69,7 +73,7 @@ export class OrdersRepository implements IOrdersRepository {
             include: orderInclude,
         });
 
-        return new ResponseOrderDto(order);
+        return this.orderPresenter.toResponseDto(order);
     }
 
     async findOne(id: number): Promise<ResponseOrderDto> {
@@ -78,7 +82,7 @@ export class OrdersRepository implements IOrdersRepository {
             include: orderInclude,
         });
 
-        return new ResponseOrderDto(order);
+        return this.orderPresenter.toResponseDto(order);
     }
 
     async delete(id: number): Promise<ResponseOrderDto> {
@@ -87,6 +91,6 @@ export class OrdersRepository implements IOrdersRepository {
             include: orderInclude,
         });
 
-        return new ResponseOrderDto(order);
+        return this.orderPresenter.toResponseDto(order);
     }
 }

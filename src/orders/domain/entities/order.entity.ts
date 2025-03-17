@@ -1,4 +1,4 @@
-import { CreateOrderDto, OrderProduct } from '../dto/create-order.dto';
+import { CreateOrderDto, OrderProduct } from '../../dto/create-order.dto';
 
 export class Order {
     customer: {

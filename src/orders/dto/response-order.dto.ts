@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, IsEnum, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '../types';
+import { OrderStatus } from '../domain/interfaces/IOrdersRepository';
 
 interface OrderRepository {
     customer: {
@@ -113,12 +113,17 @@ export class ResponseOrderDto {
         } else {
             this.customer = null;
         }
-        this.products = order.products.map((item) => ({
-            id: item.product.id,
-            name: item.product.name,
-            price: item.product.price,
-            quantity: item.quantity,
-        }));
+
+        this.products = order.products.map((item) => {
+            if (item.product) {
+                return {
+                    id: item.product.id,
+                    name: item.product.name,
+                    price: item.product.price,
+                    quantity: item.quantity,
+                };
+            }
+        });
         this.createdAt = order.createdAt;
         this.updatedAt = order.updatedAt;
         this.total = order.total;

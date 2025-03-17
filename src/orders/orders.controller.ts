@@ -1,14 +1,26 @@
 import { Controller, Post, Body, HttpStatus, Get, Param, Put, Delete, Query } from '@nestjs/common';
-import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiExcludeEndpoint, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OrderStatus } from './types';
+import { OrderStatus } from './domain/interfaces/IOrdersRepository';
 import { ResponseOrderDto } from './dto/response-order.dto';
+import { CreateOrderUseCase } from './useCases/CreateOrderUseCase';
+import { GetAllOrdersUseCase } from './useCases/GetAllOrdersUseCase';
+import { GetOrdersByStatusUseCase } from './useCases/GetOrdersByStatusUseCase';
+import { GetOrderUseCase } from './useCases/GetOrderUseCase';
+import { UpdateOrderStatusUseCase } from './useCases/UpdateOrderStatusUseCase';
+import { DeleteOrderUseCase } from './useCases/DeleteOrderUseCase';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
-    constructor(private readonly ordersService: OrdersService) {}
+    constructor(
+        private readonly createOrderUseCase: CreateOrderUseCase,
+        private readonly getAllOrdersUseCase: GetAllOrdersUseCase,
+        private readonly getOrdersByStatusUseCase: GetOrdersByStatusUseCase,
+        private readonly getOrderUseCase: GetOrderUseCase,
+        private readonly updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+        private readonly deleteOrderUseCase: DeleteOrderUseCase,
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new order.' })
@@ -43,7 +55,7 @@ export class OrdersController {
         description: 'Invalid order data provided.',
     })
     create(@Body() createOrderDto: CreateOrderDto) {
-        return this.ordersService.create(createOrderDto);
+        return this.createOrderUseCase.execute(createOrderDto);
     }
 
     @Get()
@@ -61,9 +73,9 @@ export class OrdersController {
     })
     findAll(@Query('status') status: OrderStatus): Promise<ResponseOrderDto[]> {
         if (status) {
-            return this.ordersService.findByStatus(status);
+            return this.getOrdersByStatusUseCase.execute(status);
         }
-        return this.ordersService.findAll();
+        return this.getAllOrdersUseCase.execute();
     }
 
     @Get(':id')
@@ -83,7 +95,7 @@ export class OrdersController {
         description: 'Order not found.',
     })
     findOne(@Param('id') id: string): Promise<ResponseOrderDto> {
-        return this.ordersService.findOne(+id);
+        return this.getOrderUseCase.execute(+id);
     }
 
     @Put(':id')
@@ -113,7 +125,7 @@ export class OrdersController {
     //     description: 'Order not found.',
     // })
     updateStatus(@Param('id') id: string, @Body() newStatus: { status: OrderStatus }): Promise<ResponseOrderDto> {
-        return this.ordersService.updateStatus(+id, newStatus.status);
+        return this.updateOrderStatusUseCase.execute(+id, newStatus.status);
     }
 
     @Delete(':id')
@@ -134,6 +146,6 @@ export class OrdersController {
     //     description: 'Order not found.',
     // })
     remove(@Param('id') id: string): Promise<ResponseOrderDto> {
-        return this.ordersService.remove(+id);
+        return this.deleteOrderUseCase.execute(+id);
     }
 }
