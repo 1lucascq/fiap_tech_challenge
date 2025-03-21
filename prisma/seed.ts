@@ -101,6 +101,12 @@ async function seedOrders({ xBurger, xEgg, cookie, cola, john, jane }) {
                     },
                 ],
             },
+            payment: {
+                create: {
+                    status: 'PENDING',
+                    paymentId: 0,
+                },
+            },
         },
     });
 
@@ -121,6 +127,12 @@ async function seedOrders({ xBurger, xEgg, cookie, cola, john, jane }) {
                     },
                 ],
             },
+            payment: {
+                create: {
+                    status: 'PENDING',
+                    paymentId: 0,
+                },
+            },
         },
     });
 
@@ -140,6 +152,12 @@ async function seedOrders({ xBurger, xEgg, cookie, cola, john, jane }) {
                         quantity: 1,
                     },
                 ],
+            },
+            payment: {
+                create: {
+                    status: 'PAID',
+                    paymentId: 999,
+                },
             },
         },
     });
