@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ResponseOrderDto } from '../dto/response-order.dto';
-import { IOrdersRepository, OrderStatus } from '../domain/interfaces/IOrdersRepository';
+import {
+    IOrdersRepository,
+    OrderPaymentStatus,
+    OrderStatus,
+    PaymentStatus,
+} from '../domain/interfaces/IOrdersRepository';
 import { OrderPresenter } from '../presenter/orderPresenter';
 
 const orderInclude = {
@@ -25,6 +30,7 @@ const orderInclude = {
             },
         },
     },
+    payment: true,
 } satisfies Prisma.OrderInclude;
 
 @Injectable()
@@ -92,5 +98,27 @@ export class OrdersRepository implements IOrdersRepository {
         });
 
         return this.orderPresenter.toResponseDto(order);
+    }
+
+    async getPaymentStatus(id: number): Promise<OrderPaymentStatus> {
+        const order = await this.prisma.order.findUnique({
+            where: { id },
+            include: {
+                payment: true,
+            },
+        });
+
+        return this.orderPresenter.toPaymentStatusDto(order.payment);
+    }
+
+    async updatePaymentStatus(orderId: number, status: PaymentStatus, paymentId: number): Promise<void> {
+        await this.prisma.orderPayment.update({
+            where: { orderId },
+            data: {
+                status,
+                paymentId,
+                updatedAt: new Date(),
+            },
+        });
     }
 }

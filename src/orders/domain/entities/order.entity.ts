@@ -11,6 +11,12 @@ export class Order {
     products: {
         create: Array<OrderProduct>;
     };
+    payment: {
+        create: {
+            status: string;
+            paymentId: number;
+        };
+    };
 
     constructor(createOrderDto: CreateOrderDto) {
         if (createOrderDto.customerId) {
@@ -27,6 +33,12 @@ export class Order {
                 productId: product.productId,
                 quantity: product.quantity,
             })),
+        };
+        this.payment = {
+            create: {
+                status: 'PENDING',
+                paymentId: 0,
+            },
         };
     }
 }

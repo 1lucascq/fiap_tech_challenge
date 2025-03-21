@@ -9,9 +9,12 @@ import { GetOrdersByStatusUseCase } from './useCases/GetOrdersByStatusUseCase';
 import { GetOrderUseCase } from './useCases/GetOrderUseCase';
 import { UpdateOrderStatusUseCase } from './useCases/UpdateOrderStatusUseCase';
 import { DeleteOrderUseCase } from './useCases/DeleteOrderUseCase';
+import { GetPaymentStatusUseCase } from './useCases/GetPaymentStatusUseCase';
+import { GetOrdersByPriorityUseCase } from './useCases/GetOrdersByPriorityUseCase';
+import { PaymentModule } from 'src/infrastructure/fakePayment/fakePayment.module';
 
 @Module({
-    imports: [PrismaModule],
+    imports: [PrismaModule, PaymentModule],
     controllers: [OrdersController],
     providers: [
         // Repository
@@ -29,6 +32,14 @@ import { DeleteOrderUseCase } from './useCases/DeleteOrderUseCase';
         GetOrderUseCase,
         UpdateOrderStatusUseCase,
         DeleteOrderUseCase,
+        GetPaymentStatusUseCase,
+        GetOrdersByPriorityUseCase,
+    ],
+    exports: [
+        {
+            provide: 'IOrdersRepository',
+            useClass: OrdersRepository,
+        },
     ],
 })
 export class OrdersModule {}
