@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: postgres
   strategy:
-    type: Recreate  # Importante para banco de dados
+    type: Recreate  # db
   template:
     metadata:
       labels:
@@ -23,17 +23,17 @@ spec:
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: fiap-tc2-secrets
+              name: fiap-tc-secrets
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: fiap-tc2-secrets
+              name: fiap-tc-secrets
               key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
-              name: fiap-tc2-config
+              name: fiap-tc-config
               key: POSTGRES_DB
         resources:
           limits:
