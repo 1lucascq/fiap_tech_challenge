@@ -18,7 +18,7 @@ export class FakePayment {
 
         this.logger.log(`Processing payment for order ${orderId}: paymentId=${paymentId}, success=${success}`);
 
-        // Schedule the webhook call for 1 minute later
+        // Schedule the webhook call for 10 seconds later
         this.scheduleWebhookCall(orderId, paymentId, success);
 
         return {
@@ -29,7 +29,7 @@ export class FakePayment {
     }
 
     private scheduleWebhookCall(orderId: number, paymentId: number, success: boolean): void {
-        const webhookDelay = 5000;
+        const webhookDelay = 10000;
 
         this.logger.log(`Scheduling webhook call for order ${orderId} in ${webhookDelay}ms`);
 
