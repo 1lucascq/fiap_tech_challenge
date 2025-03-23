@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { logger: ['error', 'warn'] });
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
@@ -13,6 +13,11 @@ async function bootstrap() {
             forbidNonWhitelisted: true, // throw an error if a non-whitelisted property is present in the DTO,
         }),
     );
+
+    app.use((_req, res, next) => {
+        res.setTimeout(30000);
+        next();
+    });
 
     const config = new DocumentBuilder()
         .setTitle('Tech Challenge - Fast Food App')
