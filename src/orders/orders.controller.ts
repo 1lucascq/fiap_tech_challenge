@@ -135,7 +135,7 @@ export class OrdersController {
                 status: {
                     type: 'string',
                     enum: Object.values(OrderStatus),
-                    example: OrderStatus.IN_PROGRESS,
+                    example: OrderStatus.READY_FOR_PICKUP,
                 },
             },
         },
