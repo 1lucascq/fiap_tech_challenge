@@ -59,19 +59,24 @@ git clone git@github.com:1lucascq/fiap_tech_challenge_fase_01.git
 cd fiap_tech_challenge_fase_01
 ```
 
-2. Inicie o ambiente de desenvolvimento com Kubernetes:
+2. Instalar dependências:
+```bash
+npm install
+```
+
+3. Inicie o ambiente de desenvolvimento com Kubernetes:
 ```bash
 npm run init:kubectl
 ```
 - Esse comando irá rodar o script `deploy.sh`, que é responsável por iniciar todos os recursos da aplicação.
 
-3. Inicie a aplicação:
+1. Inicie a aplicação:
 ```bash
 npm run init:app
 ```
 - Esse comando usa o _tunnel_ do Minikube para criar uma porta de acesso a aplicação. Uma nova aba abrirá no navegador com a página inicial da aplicação, que funciona como um _healthcheck_. A partir desse momento, você poderá consultar a aplicação na url aberta, que terá um formato semelhante a: _http://localhost:40129_ ou _http://127.0.0.1:40129_.
 
-4. Acesse a documentação:
+1. Acesse a documentação:
 - Na janela que será aberta no seu navegador, navegue até o endpoint `/doc` (ex.: _http://127.0.0.1:40129/doc_) para visualizar a documentação completa de todos os endpoints da API no Swagger.
 - Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas descrições, parâmetros e respostas. Você também pode testar os endpoints diretamente pela interface, enviando requisições e visualizando as respostas.
 
