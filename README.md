@@ -37,17 +37,6 @@ A imagem base da aplicação não possui vulnerabilidades detectadas e é uma ve
 
 O arquivo `docker-compose.yml` cria os serviços do PostgreSQL e NestJS, além de definir a estrutura e rede para conexão dos serviços necessários para a aplicação. Ele configura as variáveis de ambiente, portas, volumes e healthcheck para garantir que os serviços estejam funcionando corretamente.
 
-## Swagger
-
-Swagger é uma ferramenta para documentação e teste de APIs. Ele gera uma interface interativa onde você pode visualizar e testar os endpoints da API.
-
-### Acessando o Swagger
-
-1. Certifique-se de que a aplicação está rodando.
-2. Abra seu navegador e navegue até `http://localhost:3000/doc`.
-
-Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas descrições, parâmetros e respostas. Você também pode testar os endpoints diretamente pela interface, enviando requisições e visualizando as respostas.
-
 ## Kubernetes
 
 A aplicação pode ser executada com a criação do ambiente kubernetes que já está configurado através dos arquivos `yml` dentro da pasta `Kubernetes`.
@@ -84,6 +73,7 @@ npm run init:app
 
 4. Acesse a documentação:
 - Na janela que será aberta no seu navegador, navegue até o endpoint `/doc` (ex.: _http://127.0.0.1:40129/doc_) para visualizar a documentação completa de todos os endpoints da API no Swagger.
+- Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas descrições, parâmetros e respostas. Você também pode testar os endpoints diretamente pela interface, enviando requisições e visualizando as respostas.
 
 ### Deleção do Namespace
 
