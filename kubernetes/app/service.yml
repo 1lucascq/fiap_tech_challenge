@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiap-tc-service
+spec:
+  selector:
+    app: fiap-tc
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer

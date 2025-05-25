@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 import { ResponseProductDto } from '../dto/response-product.dto';
-import { IProductsRepository } from '../types';
+import { IProductsRepository } from '../domain/interfaces/IProductsRepository';
 
 @Injectable()
 export class ProductsRepository implements IProductsRepository {

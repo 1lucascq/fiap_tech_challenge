@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-tc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiap-tc
+  template:
+    metadata:
+      labels:
+        app: fiap-tc
+    spec:
+      containers:
+      - name: fiap-tc
+        image: lucascq/fiap-tc:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: fiap-tc-config
+              key: NODE_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: fiap-tc-secrets
+              key: DATABASE_URL
+        - name: AWS_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: fiap-tc-config
+              key: AWS_ENDPOINT
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=384 --max-semi-space-size=2 --expose-gc"
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3

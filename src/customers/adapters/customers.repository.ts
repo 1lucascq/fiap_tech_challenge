@@ -1,24 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
-import { ICustomersRepository } from '../types';
-import { ResponseCustomerDto } from '../dto/response-customer.dto';
+import { ICustomersRepository } from '../domain/interfaces/ICustomersRepository';
+import { Customer } from '../domain/entities/customer.entity';
 
 @Injectable()
 export class CustomersRepository implements ICustomersRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(createCustomerDto: Prisma.CustomerCreateInput): Promise<ResponseCustomerDto> {
-        const customer = await this.prisma.customer.create({ data: createCustomerDto });
-        const customerResponse = new ResponseCustomerDto(customer);
-        return customerResponse;
+    async create(customerEntity: Customer) {
+        return this.prisma.customer.create({ data: customerEntity });
     }
 
-    async findAll(): Promise<ResponseCustomerDto[]> {
+    async findAll() {
         return this.prisma.customer.findMany();
     }
 
-    async findOne(uniqueInput: Prisma.CustomerWhereUniqueInput): Promise<ResponseCustomerDto | null> {
+    async findOne(uniqueInput: Prisma.CustomerWhereUniqueInput) {
         const key = Object.keys(uniqueInput)[0];
         const value = Object.values(uniqueInput)[0];
         return this.prisma.customer.findUnique({
@@ -28,14 +26,14 @@ export class CustomersRepository implements ICustomersRepository {
         });
     }
 
-    async update(cpf: string, createCustomerDto: Prisma.CustomerUpdateInput): Promise<ResponseCustomerDto> {
+    async update(cpf: string, createCustomerDto: Prisma.CustomerUpdateInput) {
         return this.prisma.customer.update({
             where: { cpf },
             data: createCustomerDto,
         });
     }
 
-    async delete(cpf: string): Promise<ResponseCustomerDto> {
+    async delete(cpf: string) {
         return this.prisma.customer.delete({ where: { cpf } });
     }
 }

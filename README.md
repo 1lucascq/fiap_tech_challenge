@@ -1,6 +1,6 @@
 # Fast Food API - Tech Challenge Fast Food Fase 1
 
-Uma API RESTful construída com NestJS seguindo o padrão da Arquitetura Hexagonal para gerenciar pedidos, produtos e clientes de um restaurante fast food.
+Uma API RESTful construída com NestJS seguindo o padrão da Arquitetura Clean code para gerenciar pedidos, produtos e clientes de um restaurante fast food.
 
 ## Visão Geral do Projeto
 
@@ -10,8 +10,10 @@ Esta aplicação fornece endpoints para:
 - Criar, editar e remover produtos;
 - Buscar produtos por categoria;
 - Fake checkout, apenas enviar os produtos escolhidos-a fila. O checkout é a finalização do pedido;
-- Listar os pedidos
-- Processar e rastrear pedidos através de diferentes status (Criado, Em Progresso, Pronto para Retirada, Concluído)
+- Listar os pedidos;
+- Listar o status de pagamento dos pedidos;
+- Atualizar os status dos pedidos;
+- Processar e rastrear pedidos através de diferentes status (Criado, Em Progresso, Pronto para Retirada, Concluído, Cancelado)
 
 ## Stack
 
@@ -21,6 +23,8 @@ Esta aplicação fornece endpoints para:
 - Docker & Docker Compose
 - Swagger (Documentação da API)
 - Docker
+- Minikube
+- Kubernetes
 
 ## Dockerfile e docker-compose.yml
 
@@ -33,16 +37,9 @@ A imagem base da aplicação não possui vulnerabilidades detectadas e é uma ve
 
 O arquivo `docker-compose.yml` cria os serviços do PostgreSQL e NestJS, além de definir a estrutura e rede para conexão dos serviços necessários para a aplicação. Ele configura as variáveis de ambiente, portas, volumes e healthcheck para garantir que os serviços estejam funcionando corretamente.
 
-## Swagger
+## Kubernetes
 
-Swagger é uma ferramenta para documentação e teste de APIs. Ele gera uma interface interativa onde você pode visualizar e testar os endpoints da API.
-
-### Acessando o Swagger
-
-1. Certifique-se de que a aplicação está rodando.
-2. Abra seu navegador e navegue até `http://localhost:3000/doc`.
-
-Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas descrições, parâmetros e respostas. Você também pode testar os endpoints diretamente pela interface, enviando requisições e visualizando as respostas.
+A aplicação pode ser executada com a criação do ambiente kubernetes que já está configurado através dos arquivos `yml` dentro da pasta `Kubernetes`.
 
 ## Passo a passo para rodar a aplicação
 
@@ -51,8 +48,10 @@ Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas
 - Docker e Docker Compose instalados
 - Node.js 20.11.1 ou superior
 - npm 10.2.4 ou superior
+- Minikube version v1.35.0 ou superior
+- Kubernetes com as versões (ou superiores): Client Version: v1.31.4 / Kustomize Version: v5.4.2 / Server Version: v1.32.0
 
-### Configuração de Desenvolvimento
+### Iniciando a Aplicação
 
 1. Clone o repositório:
 ```bash
@@ -60,17 +59,37 @@ git clone git@github.com:1lucascq/fiap_tech_challenge_fase_01.git
 cd fiap_tech_challenge_fase_01
 ```
 
-2. Inicie o ambiente de desenvolvimento usando Docker Compose:
+2. Instalar dependências:
 ```bash
-docker-compose up --build
+npm install
 ```
 
-3. Acesse a documentação da API:
-Abra seu navegador e navegue até `http://localhost:3000/doc` para visualizar a documentação da API no Swagger.
+3. Inicie o ambiente de desenvolvimento com Kubernetes:
+```bash
+npm run init:kubectl
+```
+- Esse comando irá rodar o script `deploy.sh`, que é responsável por iniciar todos os recursos da aplicação.
+
+4. Inicie a aplicação:
+```bash
+npm run init:app
+```
+- Esse comando usa o _tunnel_ do Minikube para criar uma porta de acesso a aplicação. Uma nova aba abrirá no navegador com a página inicial da aplicação, que funciona como um _healthcheck_. A partir desse momento, você poderá consultar a aplicação na url aberta, que terá um formato semelhante a: _http://localhost:40129_ ou _http://127.0.0.1:40129_.
+
+5. Acesse a documentação:
+- Na janela que será aberta no seu navegador, navegue até o endpoint `/doc` (ex.: _http://127.0.0.1:40129/doc_) para visualizar a documentação completa de todos os endpoints da API no Swagger.
+- Na interface do Swagger, você poderá ver todos os endpoints disponíveis, suas descrições, parâmetros e respostas. Você também pode testar os endpoints diretamente pela interface, enviando requisições e visualizando as respostas.
+
+### Deleção do Namespace
+
+Caso queira deleter o _namespace_ criado, use o comando:
+```bash
+npm run delete:namespace
+```
 
 ## Funcionalidades da Aplicação
 
-Abaixo temos uma descrição básica sobre cada endpoint da aplicação. Maiores informações sobre cada rota podem ser consultadas na documentação do Swagger.
+Segue abaixo uma descrição básica sobre os endpoint da aplicação. A documentação completa com informações sobre cada rota pode ser encontrada noSwagger.
 
 ### Produtos
 - **Criar Produto**: `POST /products`
@@ -105,8 +124,10 @@ Abaixo temos uma descrição básica sobre cada endpoint da aplicação. Maiores
 - **Obter Detalhes do Pedido**: `GET /orders/:id`
   - Recuperar detalhes de um pedido específico
 - **Listar Pedidos**: `GET /orders`
-  - Obter uma lista de todos os pedidos
-  - Os pedidos são listados em ordem de criação
+  - Lista todos os pedidos ou filtra por status (usando o query parameter _status_)
+  - Se o status não for informado, retorna os _pedidos por prioridade_
+- **Obter Detalhes do Pagamento do Pedido**: `GET /orders/payment/:id`
+  - Retorna o status de pagamento de um pedido pelo ID
 - **Listar Pedidos por Status**: `GET /orders?status=IN_PROGRESS`
   - Filtrar pedidos por status específico. Usado para listar pedidos no painel
   - Os pedidos são listados em ordem de criação

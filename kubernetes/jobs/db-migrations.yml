@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fiap-tc-db-migrations
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+      - name: db-migrations
+        image: lucascq/fiap-tc:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          echo "Waiting for database to be ready..."
+          timeout=60
+          while ! nc -z postgres-service 5432; do
+            if [ $timeout -le 0 ]; then
+              echo "Timed out waiting for database connection"
+              exit 1
+            fi
+            timeout=$(($timeout - 1))
+            echo "Waiting for database... $timeout seconds remaining"
+            sleep 1
+          done
+          echo "Database is ready, running migrations and seed..."
+          npx prisma migrate deploy
+          npx prisma db seed
+          echo "Database setup completed successfully"
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: fiap-tc-config
+              key: NODE_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: fiap-tc-secrets
+              key: DATABASE_URL
+      restartPolicy: OnFailure
+      # Add initContainer if needed to wait for PostgreSQL to be ready

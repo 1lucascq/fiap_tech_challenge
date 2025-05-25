@@ -1,6 +1,6 @@
-import { IsArray, IsNumber, IsEnum, IsDateString } from 'class-validator';
+import { IsArray, IsNumber, IsEnum, IsDateString, IsObject } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '../types';
+import { OrderStatus, PaymentStatus } from '../domain/interfaces/IOrdersRepository';
 
 interface OrderRepository {
     customer: {
@@ -20,6 +20,13 @@ interface OrderRepository {
         productId: number;
         orderId: number;
     }[];
+    payment: {
+        id: number;
+        status: string;
+        paymentId: number;
+        createdAt: Date;
+        updatedAt: Date;
+    };
     id: number;
     status: string;
     createdAt: Date;
@@ -40,6 +47,12 @@ interface OrderCustomerResponse {
     name: string;
     cpf: string;
     email: string;
+}
+
+interface OrderPaymentResponse {
+    id: number;
+    status: PaymentStatus;
+    paymentId: number;
 }
 
 export class ResponseOrderDto {
@@ -75,6 +88,15 @@ export class ResponseOrderDto {
     })
     @IsArray()
     readonly products: OrderProductResponse[];
+
+    @ApiProperty({
+        name: 'payment',
+        description: 'The payment information for the order.',
+        example: { id: 1, status: PaymentStatus.PAID, paymentId: 12345 },
+        required: false,
+    })
+    @IsObject()
+    readonly payment: OrderPaymentResponse;
 
     @ApiProperty({
         name: 'createdAt',
@@ -113,12 +135,24 @@ export class ResponseOrderDto {
         } else {
             this.customer = null;
         }
-        this.products = order.products.map((item) => ({
-            id: item.product.id,
-            name: item.product.name,
-            price: item.product.price,
-            quantity: item.quantity,
-        }));
+
+        this.products = order.products.map((item) => {
+            if (item.product) {
+                return {
+                    id: item.product.id,
+                    name: item.product.name,
+                    price: item.product.price,
+                    quantity: item.quantity,
+                };
+            }
+        });
+
+        this.payment = {
+            id: order.payment.id,
+            status: order.payment.status as PaymentStatus,
+            paymentId: order.payment.paymentId,
+        };
+
         this.createdAt = order.createdAt;
         this.updatedAt = order.updatedAt;
         this.total = order.total;

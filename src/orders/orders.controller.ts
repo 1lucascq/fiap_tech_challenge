@@ -1,14 +1,28 @@
 import { Controller, Post, Body, HttpStatus, Get, Param, Put, Delete, Query } from '@nestjs/common';
-import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { ApiExcludeEndpoint, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OrderStatus } from './types';
+import { ApiBody, ApiExcludeEndpoint, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { OrderPaymentStatus, OrderStatus } from './domain/interfaces/IOrdersRepository';
 import { ResponseOrderDto } from './dto/response-order.dto';
+import { CreateOrderUseCase } from './useCases/CreateOrderUseCase';
+import { GetOrdersByStatusUseCase } from './useCases/GetOrdersByStatusUseCase';
+import { GetOrderUseCase } from './useCases/GetOrderUseCase';
+import { UpdateOrderStatusUseCase } from './useCases/UpdateOrderStatusUseCase';
+import { DeleteOrderUseCase } from './useCases/DeleteOrderUseCase';
+import { GetPaymentStatusUseCase } from './useCases/GetPaymentStatusUseCase';
+import { GetOrdersByPriorityUseCase } from './useCases/GetOrdersByPriorityUseCase';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
-    constructor(private readonly ordersService: OrdersService) {}
+    constructor(
+        private readonly createOrderUseCase: CreateOrderUseCase,
+        private readonly getOrdersByPriorityUseCase: GetOrdersByPriorityUseCase,
+        private readonly getOrdersByStatusUseCase: GetOrdersByStatusUseCase,
+        private readonly getOrderUseCase: GetOrderUseCase,
+        private readonly updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+        private readonly deleteOrderUseCase: DeleteOrderUseCase,
+        private readonly getPaymentStatusUseCase: GetPaymentStatusUseCase,
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new order.' })
@@ -43,7 +57,7 @@ export class OrdersController {
         description: 'Invalid order data provided.',
     })
     create(@Body() createOrderDto: CreateOrderDto) {
-        return this.ordersService.create(createOrderDto);
+        return this.createOrderUseCase.execute(createOrderDto);
     }
 
     @Get()
@@ -61,9 +75,9 @@ export class OrdersController {
     })
     findAll(@Query('status') status: OrderStatus): Promise<ResponseOrderDto[]> {
         if (status) {
-            return this.ordersService.findByStatus(status);
+            return this.getOrdersByStatusUseCase.execute(status);
         }
-        return this.ordersService.findAll();
+        return this.getOrdersByPriorityUseCase.execute();
     }
 
     @Get(':id')
@@ -83,37 +97,64 @@ export class OrdersController {
         description: 'Order not found.',
     })
     findOne(@Param('id') id: string): Promise<ResponseOrderDto> {
-        return this.ordersService.findOne(+id);
+        return this.getOrderUseCase.execute(+id);
+    }
+
+    @Get('payment/:id')
+    @ApiOperation({ summary: 'Get payment status of an order.' })
+    @ApiParam({
+        name: 'id',
+        description: 'Order ID',
+        example: 1,
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Payment status retrieved successfully.',
+        type: ResponseOrderDto,
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Order not found.',
+    })
+    getPaymentStatus(@Param('id') id: string): Promise<OrderPaymentStatus> {
+        return this.getPaymentStatusUseCase.execute(+id);
     }
 
     @Put(':id')
-    @ApiExcludeEndpoint()
-    // @ApiOperation({ summary: 'Update order status.' })
-    // @ApiParam({
-    //     name: 'id',
-    //     description: 'Order ID',
-    //     example: 1,
-    // })
-    // @ApiBody({
-    //     description: 'New status for the order',
-    //     enum: OrderStatus,
-    //     examples: {
-    //         example: {
-    //             value: { status: OrderStatus.IN_PROGRESS },
-    //         },
-    //     },
-    // })
-    // @ApiResponse({
-    //     status: HttpStatus.OK,
-    //     description: 'Order status updated successfully.',
-    //     type: ResponseOrderDto,
-    // })
-    // @ApiResponse({
-    //     status: HttpStatus.NOT_FOUND,
-    //     description: 'Order not found.',
-    // })
+    @ApiOperation({ summary: 'Update the status of an order.' })
+    @ApiParam({
+        name: 'id',
+        description: 'Order ID',
+        example: 1,
+    })
+    @ApiBody({
+        description: 'New status for the order',
+        type: 'object',
+        schema: {
+            properties: {
+                status: {
+                    type: 'string',
+                    enum: Object.values(OrderStatus),
+                    example: OrderStatus.READY_FOR_PICKUP,
+                },
+            },
+        },
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Order status updated successfully.',
+        type: ResponseOrderDto,
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Order not found.',
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Invalid status provided.',
+    })
     updateStatus(@Param('id') id: string, @Body() newStatus: { status: OrderStatus }): Promise<ResponseOrderDto> {
-        return this.ordersService.updateStatus(+id, newStatus.status);
+        return this.updateOrderStatusUseCase.execute(+id, newStatus.status);
     }
 
     @Delete(':id')
@@ -134,6 +175,6 @@ export class OrdersController {
     //     description: 'Order not found.',
     // })
     remove(@Param('id') id: string): Promise<ResponseOrderDto> {
-        return this.ordersService.remove(+id);
+        return this.deleteOrderUseCase.execute(+id);
     }
 }

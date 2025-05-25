@@ -1,35 +1,31 @@
 import {
     registerDecorator,
-    ValidationArguments,
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { CustomersService } from '../customers.service';
+import { CustomerValidationService } from './services/customerValidationService';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class UniqueEmailValidator implements ValidatorConstraintInterface {
-    constructor(private readonly customersService: CustomersService) {}
+    constructor(private readonly validationService: CustomerValidationService) {}
 
-    async validate(
-        email: string,
-        validationArguments?: ValidationArguments,
-    ): Promise<boolean> {
-        const customerExists = await this.customersService.findOne({
+    async validate(email: string): Promise<boolean> {
+        const customerExists = await this.validationService.findOne({
             email: email,
         });
         return !customerExists;
     }
 
-    defaultMessage(validationArguments?: ValidationArguments): string {
-		return 'This email is already in use';
+    defaultMessage(): string {
+        return 'This email is already in use';
     }
 }
 
 export const UniqueEmail = (validationOptions: ValidationOptions) => {
-    return (object: Object, property: string) => {
+    return (object: object, property: string) => {
         registerDecorator({
             target: object.constructor,
             propertyName: property,
